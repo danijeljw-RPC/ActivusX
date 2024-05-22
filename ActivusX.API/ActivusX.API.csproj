@@ -30,6 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\MSAD\ComputerObj\" />
+    <Folder Include="Controllers\MSAD\GroupObj\" />
     <Folder Include="Controllers\UserObj\" />
     <Folder Include="lib\" />
   </ItemGroup>
