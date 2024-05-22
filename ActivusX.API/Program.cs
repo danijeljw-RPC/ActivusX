@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using ActivusX.API.Data;
+using ActivusX.API.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -13,6 +14,8 @@ namespace ActivusX.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.Configure<ApiKeySettings>(builder.Configuration.GetSection("ApiKeySettings"));
+
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(connectionString));
@@ -49,6 +52,7 @@ namespace ActivusX.API
             }
 
             //app.UseHttpsRedirection();
+            app.UseMiddleware<ApiKeyMiddleware>(); // Add the API key middleware here
             app.UseAuthorization();
             app.MapControllers();
 
