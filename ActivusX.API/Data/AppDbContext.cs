@@ -1,5 +1,4 @@
-﻿using ActivusX.API.Models;
-using ActivusX.Shared.Models.MSAD;
+﻿using ActivusX.Shared.Models.MSAD;
 using ActivusX.Shared.Models.System;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +12,10 @@ public class AppDbContext : DbContext
 
     // SYSTEM
     public DbSet<AXUserAccount> AXUserAccounts { get; set; }
+    public DbSet<AXUserTransaction> AXUserTransactions { get; set; }
 
     // ACTIVE DIRECTORY
     public DbSet<ActiveDirectoryUser> ActiveDirectoryUsers { get; set; }
-
-    public DbSet<AZUser> AZUsers { get; set; }
 
     // INIT
     protected override void OnModelCreating(ModelBuilder modelBuilder)
