@@ -1,4 +1,4 @@
-﻿using ActivusX.API.Models.MSAD;
+﻿using ActivusX.Shared.Models.MSAD;
 using Microsoft.EntityFrameworkCore;
 
 namespace ActivusX.API.Data;
