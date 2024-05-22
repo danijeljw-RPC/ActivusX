@@ -1,32 +1,47 @@
 using ActivusX.WebApp.Components;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace ActivusX.WebApp
+namespace ActivusX.WebApp;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddRazorComponents()
-                .AddInteractiveServerComponents();
+        // Add services to the container.
+        builder.Services.AddRazorComponents()
+            .AddInteractiveServerComponents();
 
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
+        // authentication and authorization
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
             {
-                app.UseExceptionHandler("/Error");
-            }
+                options.Cookie.Name = "activusx_auth_token";
+                options.LoginPath = "/login";
+                options.Cookie.MaxAge = TimeSpan.FromMinutes(30);
+                options.AccessDeniedPath = "/access-denied";
+            });
+        builder.Services.AddAuthorization();
+        builder.Services.AddCascadingAuthenticationState();
 
-            app.UseStaticFiles();
-            app.UseAntiforgery();
+        // init password hasher
+        Helpers.PasswordHasher.Initialize(builder.Configuration);
 
-            app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode();
+        var app = builder.Build();
 
-            app.Run();
+        // Configure the HTTP request pipeline.
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Error");
         }
+
+        app.UseStaticFiles();
+        app.UseAntiforgery();
+
+        app.MapRazorComponents<App>()
+            .AddInteractiveServerRenderMode();
+
+        app.Run();
     }
 }
